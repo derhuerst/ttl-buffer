@@ -14,10 +14,33 @@ npm install ttl-buffer
 ```
 
 
-## Getting Started
+## Example
 
 ```javascript
-// todo
+var TtlBuffer = require('./index.js');
+
+var sumOfLastSecond = Object.create(TtlBuffer);
+sumOfLastSecond.init(1000, 0); // 1s ttl; 0 as initial value
+
+sumOfLastSecond.in = function (before, entry) { return before + entry };
+sumOfLastSecond.out = function (before, entry) { return before - entry };
+
+sumOfLastSecond.add(1);
+sumOfLastSecond.add(2);
+
+setTimeout(function () {
+	sumOfLastSecond.add(3);
+}, 500);
+
+setTimeout(function () {
+	sumOfLastSecond.valueOf(); // -> 6
+}, 900);
+setTimeout(function () {
+	sumOfLastSecond.valueOf(); // -> 3
+}, 1100);
+setTimeout(function () {
+	sumOfLastSecond.valueOf(); // -> 0
+}, 1600);
 ```
 
 
