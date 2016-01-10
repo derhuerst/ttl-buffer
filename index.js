@@ -30,8 +30,8 @@ module.exports = {
 
 	valueOf: function () {
 		var now = Date.now();
-		for (var i = 0; i < this._entries.length; i++) {
-			if (this._timestamps[i] + this.ttl >= now) break;
+		var i = 0;
+		while (i < this._entries.length && now >= (this._timestamps[i] + this.ttl)) {
 			this._value = this.out(this._value, this._entries[i]);
 			this._timestamps.shift();
 			this._entries.shift();

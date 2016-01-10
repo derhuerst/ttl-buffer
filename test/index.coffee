@@ -80,9 +80,15 @@ describe 'TtlBuffer', ->
 			assert.strictEqual b.valueOf(), 'foo'
 
 		it 'should throw out outdated entries', ->
-			b.init 100, 10
-			b.add 5
-			clock.tick 50
-			b.add 10
-			clock.tick 60 # `5` gets thrown out
-			assert.strictEqual b.valueOf(), 10 + 5 + 10 - 5
+			b.init 1000, 10
+			b.add 1
+			b.add 2
+			clock.tick 500
+			b.add 3
+
+			clock.tick 400
+			assert.strictEqual b.valueOf(), 10 + 1 + 2 + 3
+			clock.tick 200 # `1` & `2` get thrown out
+			assert.strictEqual b.valueOf(), 10 + 3
+			clock.tick 500 # `3` gets thrown out
+			assert.strictEqual b.valueOf(), 10
