@@ -1,6 +1,6 @@
 {
 	"name":			"ttl-buffer",
-	"description":	"A buffer that remove its entries after a certain time.",
+	"description":	"A buffer that removes its entries after a certain time.",
 	"version":		"0.1.0",
 	"main":			"index.js",
 	"keywords":		["ttl", "time to live", "buffer", "queue", "fifo", "timeout", "reduce"],

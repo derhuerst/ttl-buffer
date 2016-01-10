@@ -1,6 +1,6 @@
 # ttl-buffer
 
-***ttl-buffer* is a buffer that remove its entries after a certain time.** Furthermore, it map-reduces all of its values to a single value.
+*ttl-buffer* is a data structure that represents a **series of values, which can be map-reduced to a result, each having a time to live** (TTL), after which they are removed. It is [MIT-licensed](LICENSE), [tested](test/index.coffee) and embraces [prototypal programming](https://gist.github.com/derhuerst/a585c4916b1c361cc6f0).
 
 [![npm version](https://img.shields.io/npm/v/ttl-buffer.svg)](https://www.npmjs.com/package/ttl-buffer)
 [![build status](https://img.shields.io/travis/derhuerst/ttl-buffer.svg)](https://travis-ci.org/derhuerst/ttl-buffer)
@@ -17,10 +17,10 @@ npm install ttl-buffer
 ## Example
 
 ```javascript
-var TtlBuffer = require('./index.js');
+var TtlBuffer = require('ttl-buffer');
 
 var sumOfLastSecond = Object.create(TtlBuffer);
-sumOfLastSecond.init(1000, 0); // 1s ttl; 0 as initial value
+sumOfLastSecond.init(1000, 0); // 1 second ttl; 0 as initial value
 
 sumOfLastSecond.in = function (before, entry) { return before + entry };
 sumOfLastSecond.out = function (before, entry) { return before - entry };
