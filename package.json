@@ -7,7 +7,7 @@
 	"author":		"Jannis R <mail@jannisr.de>",
 	"homepage":		"https://github.com/derhuerst/ttl-buffer",
 	"repository":	"git://github.com/derhuerst/ttl-buffer.git",
-	"license":		"MIT",
+	"license":		"ISC",
 	"devDependencies": {
 		"coffee-script":	"^1.10.0",
 		"mocha":			"^2.3.4",
