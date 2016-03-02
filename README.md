@@ -1,6 +1,6 @@
 # ttl-buffer
 
-*ttl-buffer* is a data structure that represents a **series of values, which can be map-reduced to a result, each having a time to live** (TTL), after which they are removed. It is [MIT-licensed](LICENSE), [tested](test/index.coffee) and embraces [prototypal programming](https://gist.github.com/derhuerst/a585c4916b1c361cc6f0).
+*ttl-buffer* is a data structure that represents a **series of values, which can be map-reduced to a result, each having a time to live** (TTL), after which they are removed again. It is [MIT-licensed](LICENSE) and [tested](test/index.coffee).
 
 [![npm version](https://img.shields.io/npm/v/ttl-buffer.svg)](https://www.npmjs.com/package/ttl-buffer)
 [![build status](https://img.shields.io/travis/derhuerst/ttl-buffer.svg)](https://travis-ci.org/derhuerst/ttl-buffer)
@@ -17,30 +17,29 @@ npm install ttl-buffer
 ## Example
 
 ```javascript
-var TtlBuffer = require('ttl-buffer');
+const ttlBuffer = require('ttl-buffer')
 
-var sumOfLastSecond = Object.create(TtlBuffer);
-sumOfLastSecond.init(1000, 0); // 1 second ttl; 0 as initial value
+const sumOfLastSecond = ttlBuffer({
+	ttl:          1000, // time in milliseconds
+	initialValue: 0,
+	// This function will be called once you `push` a value.
+	in:           (before, entry) => before + entry,
+	// This function will be called once a value's TTL is over.
+	out:          (before, entry) => before - entry
+})
 
-sumOfLastSecond.in = function (before, entry) { return before + entry };
-sumOfLastSecond.out = function (before, entry) { return before - entry };
+sumOfLastSecond.push(1).push(2)
+sumOfLastSecond.valueOf(); // -> 3
 
-sumOfLastSecond.add(1);
-sumOfLastSecond.add(2);
+// 500ms later
+sumOfLastSecond.push(3)
+sumOfLastSecond.valueOf(); // -> 6
 
-setTimeout(function () {
-	sumOfLastSecond.add(3);
-}, 500);
+// 600ms later, TTL of `1` and `2` is over
+sumOfLastSecond.valueOf(); // -> 3
 
-setTimeout(function () {
-	sumOfLastSecond.valueOf(); // -> 6
-}, 900);
-setTimeout(function () {
-	sumOfLastSecond.valueOf(); // -> 3
-}, 1100);
-setTimeout(function () {
-	sumOfLastSecond.valueOf(); // -> 0
-}, 1600);
+// 500ms later, TTL of `3` is over
+sumOfLastSecond.valueOf(); // -> 0
 ```
 
 
