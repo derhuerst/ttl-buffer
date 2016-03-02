@@ -1,94 +1,59 @@
 assert =			require 'assert'
 sinon =				require 'sinon'
 
-TtlBuffer =			require '../index.js'
+ttlBuffer =			require '../index.js'
 
 
 
 
 
-describe 'TtlBuffer', ->
+describe 'ttlBuffer', ->
 
-	b = null
-	beforeEach -> b = Object.create TtlBuffer
-
-
-
-	describe '::init', ->
-
-		it 'should set the ttl', ->
-			b.init 100, 10
-			assert.strictEqual b.ttl, 100
-
-		it 'should set the inital value', ->
-			b.init 100, 10
-			assert.strictEqual b.valueOf(), 10
-
-		it 'should return the instance', ->
-			result = b.init 100, 10
-			assert.strictEqual result, b
+	clock = null
+	before -> clock = sinon.useFakeTimers()
+	after -> clock.restore()
 
 
 
-	describe '::add', ->
+	it 'uses the `initialValue` passed', ->
+		b = ttlBuffer initialValue: 1
+		assert.strictEqual b + 0, 1
 
-		it 'should call `in` with the passed value', ->
-			b.init 100, 'foo'
-			b.in = sinon.spy (value, entry) -> value # noop reducer
+	it 'accepts and call a custom `in` function', ->
+		spy = sinon.spy()
+		b = ttlBuffer in: spy
+		b.push 1
+		assert.strictEqual spy.callCount, 1
 
-			b.add 'bar'
-			assert.strictEqual b.in.callCount, 1
-			assert.deepStrictEqual b.in.firstCall.args, ['foo', 'bar']
+	it 'accepts and call a custom `out` function after the `ttl`', ->
+		spy = sinon.spy()
+		b = ttlBuffer out: spy, ttl: 1000
+		b.push 1
+		clock.tick 1000
+		assert.strictEqual spy.callCount, 1
 
-		it 'should use the return value of `in` as new value', ->
-			secret = Math.random()
-			b.init 100, 10
-			b.in = -> secret
+	it 'uses the return value of the `in` function as new value', ->
+		b = ttlBuffer in: (-> 3), initialValue: 0
+		assert.notStrictEqual b + 0, 3
+		b.push 0
+		assert.strictEqual b + 0, 3
 
-			b.add 'foo'
-			assert.strictEqual b.valueOf(), secret
+	it 'uses the return value of the `out` function as new value', ->
+		b = ttlBuffer out: (-> 3), initialValue: 0
+		b.push 0
+		assert.notStrictEqual b + 0, 3
+		clock.tick 1000
+		assert.strictEqual b + 0, 3
 
-		it 'should return the instance', ->
-			b.init 100, 'foo'
-			result = b.add 'bar'
-			assert.strictEqual result, b
+	it 'call the `in` function with the previous value & the entry', ->
+		spy = sinon.spy()
+		ttlBuffer(in: spy, initialValue: 1).push 2
+		assert.strictEqual spy.callCount, 1
+		assert.deepStrictEqual spy.firstCall.args, [1, 2]
 
-
-
-	describe '::in (default reducer)', ->
-
-		it 'should add the entry to the value', ->
-			result = b.in 1, 2
-			assert.strictEqual result, 3
-
-	describe '::out (default reducer)', ->
-
-		it 'should subtract the entry from the value', ->
-			result = b.out 3, 2
-			assert.strictEqual result, 1
-
-
-
-	describe '::valueOf', ->
-
-		clock = null
-		before -> clock = sinon.useFakeTimers()
-		after -> clock.restore()
-
-		it 'should return the value', ->
-			b.init 100, 'foo'
-			assert.strictEqual b.valueOf(), 'foo'
-
-		it 'should throw out outdated entries', ->
-			b.init 1000, 10
-			b.add 1
-			b.add 2
-			clock.tick 500
-			b.add 3
-
-			clock.tick 400
-			assert.strictEqual b.valueOf(), 10 + 1 + 2 + 3
-			clock.tick 200 # `1` & `2` get thrown out
-			assert.strictEqual b.valueOf(), 10 + 3
-			clock.tick 500 # `3` gets thrown out
-			assert.strictEqual b.valueOf(), 10
+	it 'call the `out` function with the previous value & the entry', ->
+		spy = sinon.spy()
+		ttlBuffer(in: (-> 2), out: spy, ttl: 300).push 1
+		clock.tick 300
+		assert.strictEqual spy.callCount, 1
+		assert.deepStrictEqual spy.firstCall.args, [2, 1]
