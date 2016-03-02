@@ -9,13 +9,14 @@
 	"repository":	"git://github.com/derhuerst/ttl-buffer.git",
 	"license":		"ISC",
 	"devDependencies": {
-		"coffee-script":	"^1.10.0",
-		"mocha":			"^2.3.4",
-		"sinon":			"^1.17.2"
+		"coffee-script": "^1.10.0",
+		"nodeunit":      "^0.9.1",
+		"sinon":         "^1.17.2",
+		"watchy":        "^0.6.6"
 	},
 	"scripts": {
-		"test":				"mocha -R min --compilers coffee:coffee-script/register",
-		"test:watch":		"mocha -R min -w --compilers coffee:coffee-script/register",
-		"prepublish":		"npm test"
+		"test":          "nodeunit --reporter minimal test.coffee",
+		"test:watch":    "watchy -s -w . nodeunit --reporter minimal test.coffee",
+		"prepublish":    "npm test"
 	}
 }
