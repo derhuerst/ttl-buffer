@@ -1,45 +1,31 @@
-module.exports = {
+'use strict'
+
+const add      = (value, entry) => value + entry
+const subtract = (value, entry) => value - entry
 
 
 
-	init: function (ttl, initialValue) {
-		this.ttl = ttl;
-		this._entries = [];
-		this._timestamps = [];
-		this._value = initialValue;
+const ttlBuffer = function (options) {
+	if ('object' !== typeof options) options = {}
 
-		return this;
-	},
+	const onIn  = ('function' === typeof options.in)  ? options.in           : add
+	const onOut = ('function' === typeof options.out) ? options.out          : subtract
+	const ttl   = (options.ttl > 0)                   ? options.ttl          : 1000
+	let   value = (options.initialValue != null)      ? options.initialValue : 0
 
+	return {
 
+		push: function (entry) {
+			value = onIn(value, entry)
+			setTimeout(function () { value = onOut(value, entry) }, ttl)
+			return this
+		},
 
-	add: function (entry) {
-		this._timestamps.push(Date.now());
-		this._entries.push(entry);
-		this._value = this.in(this._value, entry);
+		valueOf: function () { return value }
 
-		return this;
-	},
-
-
-
-	in: function (value, entry) { return value + entry },
-	out: function (value, entry) { return value - entry },
-
-
-
-	valueOf: function () {
-		var now = Date.now();
-		var i = 0;
-		while (i < this._entries.length && now >= (this._timestamps[i] + this.ttl)) {
-			this._value = this.out(this._value, this._entries[i]);
-			this._timestamps.shift();
-			this._entries.shift();
-		}
-
-		return this._value;
 	}
+}
 
 
 
-};
+module.exports = ttlBuffer
