@@ -9,7 +9,7 @@ const defaults = {
 const ttlBuffer = (opt) => {
 	const onIn = opt.in || defaults.in
 	const onOut = opt.out || defaults.out
-	const ttl = 'tll' in opt ? opt.tll : defaults.tll
+	const ttl = 'ttl' in opt ? opt.ttl : defaults.ttl
 	let value = 'initialValue' in opt ? opt.initialValue : defaults.initialValue
 
 	const buffer = {
