@@ -71,6 +71,7 @@ test('calls `out` with previous value & entry', (t) => {
 	t.plan(2)
 	const clock = sinon.useFakeTimers()
 	ttlBuffer({
+		ttl: 500,
 		in: () => 1,
 		out: (p, e) => {
 			t.strictEqual(p, 1)
