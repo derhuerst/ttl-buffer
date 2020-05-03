@@ -13,7 +13,7 @@
 	"devDependencies": {
 		"tape": "^5.0.0",
 		"sinon": "^7.2.3",
-		"tap-min": "^1.2"
+		"tap-min": "^2.0.0"
 	},
 	"scripts": {
 		"test": "node test.js | tap-min",
