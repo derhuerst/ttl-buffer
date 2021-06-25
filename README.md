@@ -1,11 +1,13 @@
 # ttl-buffer ⌛️
 
-*ttl-buffer* is a data structure that represents a **series of values, which can be map-reduced to a result, each having a time to live** (TTL), after which they are removed again.
+*ttl-buffer* is a data structure that represents a **series of values, which can be map-reduced to a result, each having a time to live** (TTL), after which they are removed again. Like [roll-reduce](https://github.com/raineorshine/roll-reduce#roll-reduce), but time-based.
 
 [![npm version](https://img.shields.io/npm/v/ttl-buffer.svg)](https://www.npmjs.com/package/ttl-buffer)
 [![build status](https://img.shields.io/travis/derhuerst/ttl-buffer.svg)](https://travis-ci.org/derhuerst/ttl-buffer)
 [![dev dependency status](https://img.shields.io/david/dev/derhuerst/ttl-buffer.svg)](https://david-dm.org/derhuerst/ttl-buffer#info=devDependencies)
 ![ISC-licensed](https://img.shields.io/github/license/derhuerst/ttl-buffer.svg)
+[![support me via GitHub Sponsors](https://img.shields.io/badge/support%20me-donate-fa7664.svg)](https://github.com/sponsors/derhuerst)
+[![chat with me on Twitter](https://img.shields.io/badge/chat%20with%20me-on%20Twitter-1da1f2.svg)](https://twitter.com/derhuerst)
 
 
 ## Installing

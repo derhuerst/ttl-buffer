@@ -1,7 +1,7 @@
 {
 	"name":			"ttl-buffer",
 	"description":	"A buffer that removes its entries after a certain time.",
-	"version":		"0.3.1",
+	"version": "1.0.0",
 	"main":			"index.js",
 	"keywords":		["ttl", "time to live", "buffer", "queue", "fifo", "timeout", "reduce"],
 	"author":		"Jannis R <mail@jannisr.de>",
@@ -9,11 +9,13 @@
 	"repository":	"git://github.com/derhuerst/ttl-buffer.git",
 	"issues":       "https://github.com/derhuerst/ttl-buffer/issues",
 	"license":		"ISC",
-	"engines":      {"node": ">=6"},
+	"engines": {
+		"node": ">=14"
+	},
 	"devDependencies": {
-		"tape": "^5.0.0",
-		"sinon": "^7.2.3",
-		"tap-min": "^1.2"
+		"sinon": "^11.1.1",
+		"tap-min": "^2.0.0",
+		"tape": "^5.0.0"
 	},
 	"scripts": {
 		"test": "node test.js | tap-min",
